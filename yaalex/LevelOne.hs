@@ -40,7 +40,7 @@ task filepath = do
     else error $ "number of parsed problems is not matching: " ++ show n ++ " vs " ++ (show . length $ problems)
 
 -- change to represent the problem
-type Problem = String
+type Problem = (Int, Int)
 
 parseProblems :: String -> [Problem]
 parseProblems input = case tryParse (everyP problemParser) input of
@@ -49,11 +49,11 @@ parseProblems input = case tryParse (everyP problemParser) input of
 
 problemParser :: Parser Problem
 problemParser = do
-  w <- nextCharP
+  w <- nextNatP
   skipSpacesP
   h <- nextNatP
   skipLineP
-  return "problem"
+  return (w, h)
 
 processProblem :: Problem -> String
-processProblem = undefined
+processProblem (w, h) = show $ h * div w 3
