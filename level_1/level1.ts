@@ -1,7 +1,7 @@
 const path = Deno.args[0];
-const input = Deno.readTextFileSync(path).split("\r\n").filter((line) =>
-    !!line
-);
+const input = Deno.readTextFileSync(path)
+    .split("\r\n")
+    .filter((line) => !!line);
 
 const [count, ...lines] = input;
 
