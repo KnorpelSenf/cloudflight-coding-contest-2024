@@ -1,4 +1,3 @@
-use rayon::prelude::*;
 use std::{collections::HashMap, env, fs};
 
 use good_lp::{
@@ -22,12 +21,11 @@ fn main() {
         .map(|vec| (vec[0], vec[1], vec[2]))
         .collect();
 
-    let output = lines
-        .into_par_iter()
-        .map(|(x, y, count)| process(x, y, count).to_string())
-        .collect::<Vec<_>>()
-        .join("\n\n");
-    println!("{output}");
+    for (x, y, _) in lines {
+        let result = process(x, y);
+        let output = result.to_string();
+        println!("{output}\n");
+    }
 }
 
 struct Room {
@@ -117,7 +115,7 @@ impl Constraints {
     }
 }
 
-fn process(x: i32, y: i32, total: i32) -> Room {
+fn process(x: i32, y: i32) -> Room {
     let mut vars = variables!();
     let mut count: Expression = 0.into();
     let mut constraints = Constraints::new(x, y);
@@ -141,10 +139,5 @@ fn process(x: i32, y: i32, total: i32) -> Room {
         .into_iter()
         .map(|col| col.into_iter().map(|v| solution.value(v).into()).collect())
         .collect();
-    let xs: usize = positions
-        .iter()
-        .map(|col| col.iter().filter(|pos| matches!(pos, Position::X)).count())
-        .sum();
-    println!("Placed {xs} desks and expected {}", total * 2);
     Room { x, y, positions }
 }
